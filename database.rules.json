@@ -2,7 +2,12 @@
   "rules": {
     ".read": "auth != null",
     "posts": {
-      ".write": "root.child(auth.uid).child('moderator').val() == true"
+      ".write": "root.child('users').child(auth.uid).child('role').val() == 'moderator'"
+    },
+    "users": {
+      "$uid": {
+        ".write": "$uid === auth.uid"
+      }
     }
   }
 }

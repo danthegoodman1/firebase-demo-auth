@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+    <title>THIS IS IT</title>
 
     <!-- update the version number as needed -->
     <script defer src="/__/firebase/4.12.0/firebase-app.js"></script>
@@ -95,8 +95,13 @@
         user.updateProfile({
           displayName: theVal
         }).then(function() {
-          document.getElementById("theInput").value = "";
           login();
+          const user = firebase.auth().currentUser;
+          let userRef = firebase.database().ref().child(`/users/${user.uid}`);
+          userRef.update({
+            displayName: theVal
+          });
+          document.getElementById("theInput").value = "";
           alert("Display name updated to: " + theVal);
         }).catch(function(error) {
           alert("error!");
@@ -109,10 +114,7 @@
         let postsRef = firebase.database().ref().child("posts");
         postsRef.set({
           test1: info
-        });
-        postsRef.on('child_changed', e => {
-          alert("Changed: " + e.key + " value to: " + e.val());
-        });
+        }).then(alert("Changed test1 value to: " + info));
       }
 
       window.onload = login();
