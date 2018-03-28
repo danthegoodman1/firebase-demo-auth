@@ -92,6 +92,7 @@
         user.updateProfile({
           displayName: theVal
         }).then(function() {
+          document.getElementById("theInput").value = "";
           login();
           alert("Display name updated to: " + theVal);
         }).catch(function(error) {
