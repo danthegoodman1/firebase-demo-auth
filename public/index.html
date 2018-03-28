@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welcome to Firebase Hosting</title>
+
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/4.12.0/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/4.12.0/firebase-auth.js"></script>
+    <script defer src="/__/firebase/4.12.0/firebase-database.js"></script>
+    <script defer src="/__/firebase/4.12.0/firebase-messaging.js"></script>
+    <script defer src="/__/firebase/4.12.0/firebase-storage.js"></script>
+    <!-- initialize the SDK after all desired features are loaded -->
+    <script defer src="/__/firebase/init.js"></script>
+
+    <style media="screen">
+      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
+      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
+      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
+      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
+      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
+      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
+      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
+      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
+      @media (max-width: 600px) {
+        body, #message { margin-top: 0; background: white; box-shadow: none; }
+        body { border-top: 16px solid #ffa100; }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Time TO AUTH@!!!!!</h1>
+    <h2>Here is the signed, in user's display name:</h2>
+    <pre id="theDisplayName"></pre>
+    <h2>Change the display name here:</h2>
+    <input id="theInput" type="text"/>
+    <button id="changeDisplaybtn">Change!</button>
+    <button id="logoutButton">Logout</button>
+
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyCTP8n6DgqroDonbsEHbLt_YpBNAaOtBBM",
+        authDomain: "fir-auth-a27ba.firebaseapp.com",
+        databaseURL: "https://fir-auth-a27ba.firebaseio.com",
+        projectId: "fir-auth-a27ba",
+        storageBucket: "fir-auth-a27ba.appspot.com",
+        messagingSenderId: "814174966964"
+      };
+      firebase.initializeApp(config);
+
+      const app = (user) => {
+        document.getElementById("theDisplayName").innerHTML = user.displayName;
+      };
+
+      function login(){
+        firebase.auth().onAuthStateChanged(function(user) {
+          if (user) {
+            app(user);
+          } else {
+            var provider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth().signInWithRedirect(provider);
+          }
+        });
+        // FOR SOME REASON THE ARROW FUNCTION LOOPED THE LOGIN WHEN HOSTING WITH FireBASE but not locally on a webserver wtf firebase?????
+        // firebase.auth().onAuthStateChanged((user) => {
+        //   if(user){
+        //     // User is signed in
+        //     app(user);
+        //   } else {
+        //     var provider = new firebase.auth.GoogleAuthProvider();
+        //     firebase.auth().signInWithRedirect(provider);
+        //   }
+        // });
+      };
+
+      const logout = () => {
+        firebase.auth().signOut().then(() => {
+          alert("Signed out!");
+        }).catch(function(error) {
+          alert("sign out errir of ujenri");
+        });
+      }
+
+      function changeDisplayName(){
+        console.log("Fired change name!");
+        let theVal = document.getElementById("theInput").value;
+        const user = firebase.auth().currentUser;
+        user.updateProfile({
+          displayName: theVal
+        }).then(function() {
+          login();
+          alert("Display name updated to: " + theVal);
+        }).catch(function(error) {
+          alert("error!");
+        });
+      }
+
+      window.onload = login();
+      document.getElementById("logoutButton").onclick = logout;
+      document.getElementById("changeDisplaybtn").onclick = changeDisplayName;
+
+    </script>
+    <script src="funjs.js"></script>
+  </body>
+</html>
