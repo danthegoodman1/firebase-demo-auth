@@ -1,6 +1,8 @@
 {
   "rules": {
     ".read": "auth != null",
-    ".write": "auth != null"
+    "posts": {
+      ".write": "root.child(auth.uid).child('moderator').val() == true"
+    }
   }
 }
